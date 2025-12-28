@@ -8,7 +8,6 @@ const getRandomArrayElement = (elements) => elements[getRandomInteger(0, element
 const generateComments = () => {
   const commentsCount = getRandomInteger(0, 30);
   const comments = [];
-
   const messages = [
     'Всё отлично!',
     'В целом всё неплохо. Но не всё.',
@@ -54,3 +53,5 @@ const generatePhotos = () => {
 };
 
 generatePhotos();
+
+//привет работай уже плиз
