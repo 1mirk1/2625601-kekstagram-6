@@ -1,21 +1,17 @@
-// Функция для проверки длины строки
-const checkStringLength = (string, maxLength) => string.length <= maxLength;
-
-// Функция для проверки палиндрома
-const isPalindrome = (string) => {
-  const normalizedString = string.replaceAll(' ', '').toLowerCase();
-  let reversedString = '';
-  for (let i = normalizedString.length - 1; i >= 0; i--) {
-    reversedString += normalizedString[i];
-  }
-  return normalizedString === reversedString;
+// Функция для преобразования времени в минуты
+const timeToMinutes = (timeStr) => {
+  const [hours, minutes] = timeStr.split(':').map(Number);
+  return hours * 60 + minutes;
 };
 
-checkStringLength('проверяемая строка', 20);
-checkStringLength('проверяемая строка', 18);
-checkStringLength('проверяемая строка', 10);
+// Основная функция проверки времени встречи
+const isMeetingWithinWorkHours = (workStart, workEnd, meetingStart, meetingDuration) => {
+  const workStartMinutes = timeToMinutes(workStart);
+  const workEndMinutes = timeToMinutes(workEnd);
+  const meetingStartMinutes = timeToMinutes(meetingStart);
+  const meetingEndMinutes = meetingStartMinutes + meetingDuration;
 
-isPalindrome('топот');
-isPalindrome('ДовОд');
-isPalindrome('Кекс');
-isPalindrome('Лёша на полке клопа нашёл ');
+  return meetingStartMinutes >= workStartMinutes && meetingEndMinutes <= workEndMinutes;
+};
+
+isMeetingWithinWorkHours();
