@@ -1,26 +1,30 @@
 import { generatePhotos } from './post.js';
+import { openFullSizePhoto } from './full-pictures.js';
 
 const renderMiniatures = () => {
   const picturesContainer = document.querySelector('.pictures');
-  // Проверяем существование контейнера
   if (!picturesContainer) {
     return;
   }
   const pictureTemplate = document.querySelector('#picture');
-  // Проверяем существование шаблона
   if (!pictureTemplate) {
     return;
   }
   const photos = generatePhotos();
   const fragment = document.createDocumentFragment();
 
-  photos.forEach(({ url, description, likes, comments }) => {
+  photos.forEach((photo) => {
     const pictureElement = pictureTemplate.content.querySelector('.picture').cloneNode(true);
     const imageElement = pictureElement.querySelector('.picture__img');
-    imageElement.src = url;
-    imageElement.alt = description;
-    pictureElement.querySelector('.picture__likes').textContent = likes;
-    pictureElement.querySelector('.picture__comments').textContent = comments.length;
+    imageElement.src = photo.url;
+    imageElement.alt = photo.description;
+    pictureElement.querySelector('.picture__likes').textContent = photo.likes;
+    pictureElement.querySelector('.picture__comments').textContent = photo.comments.length;
+    // Добавляем обработчик клика для открытия полноразмерного изображения
+    pictureElement.addEventListener('click', (evt) => {
+      evt.preventDefault();
+      openFullSizePhoto(photo);
+    });
     fragment.appendChild(pictureElement);
   });
   picturesContainer.appendChild(fragment);
