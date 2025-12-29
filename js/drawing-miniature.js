@@ -1,4 +1,4 @@
-import { generatePhotos } from './post.js';
+import { generatePhotos } from './generate-data.js';
 import { openFullSizePhoto } from './full-pictures.js';
 
 const renderMiniatures = () => {

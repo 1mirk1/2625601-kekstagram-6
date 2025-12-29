@@ -27,4 +27,12 @@ const getRandomArrayElement = (elements) => {
   return elements[randomIndex];
 };
 
-export { getRandomInteger, getUniqueIdGenerator, getRandomArrayElement };
+// Функция для проверки нажатия клавиши Escape
+const isEscapeKey = (evt) => evt.key === 'Escape';
+
+export {
+  getRandomInteger,
+  getUniqueIdGenerator,
+  getRandomArrayElement,
+  isEscapeKey
+};
