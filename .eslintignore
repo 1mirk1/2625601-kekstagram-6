@@ -1,2 +1,3 @@
 webpack.config.js
 js/pristine.min.js
+vendor/
