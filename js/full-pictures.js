@@ -1,31 +1,52 @@
-// Константы для элементов DOM
-const bigPictureElement = document.querySelector('.big-picture');
-const bigPictureImgElement = bigPictureElement.querySelector('.big-picture__img img');
-const socialCaptionElement = bigPictureElement.querySelector('.social__caption');
-const likesCountElement = bigPictureElement.querySelector('.likes-count');
-const socialCommentsElement = bigPictureElement.querySelector('.social__comments');
-const socialCommentCountElement = bigPictureElement.querySelector('.social__comment-count');
-const commentsLoaderElement = bigPictureElement.querySelector('.comments-loader');
-const cancelButtonElement = bigPictureElement.querySelector('.big-picture__cancel');
+let bigPictureElement = null;
+let bigPictureImgElement = null;
+let socialCaptionElement = null;
+let likesCountElement = null;
+let socialCommentsElement = null;
+let socialCommentCountElement = null;
+let commentsLoaderElement = null;
+let cancelButtonElement = null;
 
 let currentComments = [];
 let shownCommentsCount = 0;
 const COMMENTS_PER_PAGE = 5;
 
+function initBigPictureDOM() {
+  if (bigPictureElement) {
+    return; // Уже инициализировано
+  }
+
+  bigPictureElement = document.querySelector('.big-picture');
+  bigPictureImgElement = bigPictureElement.querySelector('.big-picture__img img');
+  socialCaptionElement = bigPictureElement.querySelector('.social__caption');
+  likesCountElement = bigPictureElement.querySelector('.likes-count');
+  socialCommentsElement = bigPictureElement.querySelector('.social__comments');
+  socialCommentCountElement = bigPictureElement.querySelector('.social__comment-count');
+  commentsLoaderElement = bigPictureElement.querySelector('.comments-loader');
+  cancelButtonElement = bigPictureElement.querySelector('.big-picture__cancel');
+
+  // Назначаем обработчик закрытия один раз
+  cancelButtonElement.addEventListener('click', closeFullSizePhoto);
+}
+
 function createCommentElement(comment) {
   const commentElement = document.createElement('li');
   commentElement.classList.add('social__comment');
+
   const avatarElement = document.createElement('img');
   avatarElement.classList.add('social__picture');
   avatarElement.src = comment.avatar;
   avatarElement.alt = comment.name;
   avatarElement.width = 35;
   avatarElement.height = 35;
+
   const textElement = document.createElement('p');
   textElement.classList.add('social__text');
   textElement.textContent = comment.message;
+
   commentElement.appendChild(avatarElement);
   commentElement.appendChild(textElement);
+
   return commentElement;
 }
 
@@ -42,6 +63,7 @@ function updateCommentsCounter() {
   const shownText = `${Math.min(shownCommentsCount, currentComments.length)} из `;
   const totalText = `${currentComments.length} комментариев`;
   socialCommentCountElement.textContent = shownText + totalText;
+
   if (shownCommentsCount >= currentComments.length) {
     commentsLoaderElement.classList.add('hidden');
   } else {
@@ -87,29 +109,32 @@ function closeFullSizePhoto() {
   bigPictureElement.classList.add('hidden');
   document.body.classList.remove('modal-open');
   document.removeEventListener('keydown', onDocumentKeydown);
+  commentsLoaderElement.removeEventListener('click', onCommentsLoaderClick);
+
+  // Сбрасываем состояние (опционально, но рекомендовано)
   currentComments = [];
   shownCommentsCount = 0;
-  commentsLoaderElement.removeEventListener('click', onCommentsLoaderClick);
 }
 
 function openFullSizePhoto(photo) {
+  initBigPictureDOM(); // Инициализируем DOM при первом вызове
+
   bigPictureImgElement.src = photo.url;
   bigPictureImgElement.alt = photo.description;
   socialCaptionElement.textContent = photo.description;
   likesCountElement.textContent = photo.likes;
+
   currentComments = photo.comments;
   shownCommentsCount = 0;
   renderInitialComments();
+
   socialCommentCountElement.classList.remove('hidden');
-  commentsLoaderElement.classList.remove('hidden');
   bigPictureElement.classList.remove('hidden');
   document.body.classList.add('modal-open');
+
   document.addEventListener('keydown', onDocumentKeydown);
   commentsLoaderElement.addEventListener('click', onCommentsLoaderClick);
 }
 
-cancelButtonElement.addEventListener('click', () => {
-  closeFullSizePhoto();
-});
-
+// Экспортируем функцию для открытия
 export { openFullSizePhoto };

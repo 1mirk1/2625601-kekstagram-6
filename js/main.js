@@ -1,6 +1,8 @@
 import { renderMiniatures } from './drawing-miniature.js';
+import { initForm } from './form.js';
 
-// Дожидаемся загрузки DOM
+// Инициализация при загрузке DOM
 document.addEventListener('DOMContentLoaded', () => {
   renderMiniatures();
+  initForm();
 });
