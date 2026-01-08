@@ -12,9 +12,7 @@ let shownCommentsCount = 0;
 const COMMENTS_PER_PAGE = 5;
 
 function initBigPictureDOM() {
-  if (bigPictureElement) {
-    return; // Уже инициализировано
-  }
+  if (bigPictureElement) {return;}
 
   bigPictureElement = document.querySelector('.big-picture');
   bigPictureImgElement = bigPictureElement.querySelector('.big-picture__img img');
@@ -25,28 +23,23 @@ function initBigPictureDOM() {
   commentsLoaderElement = bigPictureElement.querySelector('.comments-loader');
   cancelButtonElement = bigPictureElement.querySelector('.big-picture__cancel');
 
-  // Назначаем обработчик закрытия один раз
   cancelButtonElement.addEventListener('click', closeFullSizePhoto);
 }
 
 function createCommentElement(comment) {
   const commentElement = document.createElement('li');
   commentElement.classList.add('social__comment');
-
   const avatarElement = document.createElement('img');
   avatarElement.classList.add('social__picture');
   avatarElement.src = comment.avatar;
   avatarElement.alt = comment.name;
   avatarElement.width = 35;
   avatarElement.height = 35;
-
   const textElement = document.createElement('p');
   textElement.classList.add('social__text');
   textElement.textContent = comment.message;
-
   commentElement.appendChild(avatarElement);
   commentElement.appendChild(textElement);
-
   return commentElement;
 }
 
@@ -63,7 +56,6 @@ function updateCommentsCounter() {
   const shownText = `${Math.min(shownCommentsCount, currentComments.length)} из `;
   const totalText = `${currentComments.length} комментариев`;
   socialCommentCountElement.textContent = shownText + totalText;
-
   if (shownCommentsCount >= currentComments.length) {
     commentsLoaderElement.classList.add('hidden');
   } else {
@@ -76,7 +68,6 @@ function renderInitialComments() {
   const initialCount = Math.min(COMMENTS_PER_PAGE, currentComments.length);
   const initialComments = currentComments.slice(0, initialCount);
   shownCommentsCount = initialComments.length;
-
   renderCommentsPortion(initialComments);
   updateCommentsCounter();
 }
@@ -84,11 +75,7 @@ function renderInitialComments() {
 function loadMoreComments() {
   const remainingComments = currentComments.length - shownCommentsCount;
   const nextCount = Math.min(COMMENTS_PER_PAGE, remainingComments);
-  const nextComments = currentComments.slice(
-    shownCommentsCount,
-    shownCommentsCount + nextCount
-  );
-
+  const nextComments = currentComments.slice(shownCommentsCount, shownCommentsCount + nextCount);
   renderCommentsPortion(nextComments);
   shownCommentsCount += nextComments.length;
   updateCommentsCounter();
@@ -110,31 +97,24 @@ function closeFullSizePhoto() {
   document.body.classList.remove('modal-open');
   document.removeEventListener('keydown', onDocumentKeydown);
   commentsLoaderElement.removeEventListener('click', onCommentsLoaderClick);
-
-  // Сбрасываем состояние (опционально, но рекомендовано)
   currentComments = [];
   shownCommentsCount = 0;
 }
 
 function openFullSizePhoto(photo) {
-  initBigPictureDOM(); // Инициализируем DOM при первом вызове
-
+  initBigPictureDOM();
   bigPictureImgElement.src = photo.url;
   bigPictureImgElement.alt = photo.description;
   socialCaptionElement.textContent = photo.description;
   likesCountElement.textContent = photo.likes;
-
   currentComments = photo.comments;
   shownCommentsCount = 0;
   renderInitialComments();
-
   socialCommentCountElement.classList.remove('hidden');
   bigPictureElement.classList.remove('hidden');
   document.body.classList.add('modal-open');
-
   document.addEventListener('keydown', onDocumentKeydown);
   commentsLoaderElement.addEventListener('click', onCommentsLoaderClick);
 }
 
-// Экспортируем функцию для открытия
 export { openFullSizePhoto };
