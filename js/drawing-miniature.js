@@ -1,16 +1,23 @@
-import { generatePhotos } from './generate-data.js';
 import { openFullSizePhoto } from './full-pictures.js';
 
-const renderMiniatures = () => {
-  const picturesContainer = document.querySelector('.pictures');
+let picturesContainer = null;
+
+const renderMiniatures = (photos) => {
   if (!picturesContainer) {
-    return;
+    picturesContainer = document.querySelector('.pictures');
+    if (!picturesContainer) {
+      return;
+    }
   }
+
   const pictureTemplate = document.querySelector('#picture');
   if (!pictureTemplate) {
     return;
   }
-  const photos = generatePhotos();
+
+  const pictures = picturesContainer.querySelectorAll('.picture');
+  pictures.forEach((picture) => picture.remove());
+
   const fragment = document.createDocumentFragment();
 
   photos.forEach((photo) => {
@@ -20,13 +27,15 @@ const renderMiniatures = () => {
     imageElement.alt = photo.description;
     pictureElement.querySelector('.picture__likes').textContent = photo.likes;
     pictureElement.querySelector('.picture__comments').textContent = photo.comments.length;
-    // Добавляем обработчик клика для открытия полноразмерного изображения
+
     pictureElement.addEventListener('click', (evt) => {
       evt.preventDefault();
       openFullSizePhoto(photo);
     });
+
     fragment.appendChild(pictureElement);
   });
+
   picturesContainer.appendChild(fragment);
 };
 
