@@ -95,7 +95,6 @@ export const resetEffectSelection = () => {
   }
 };
 
-// Обновлённая функция сброса
 export const resetFiltersState = () => {
   currentScale = 100;
   currentEffect = 'none';

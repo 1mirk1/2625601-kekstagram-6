@@ -1,5 +1,3 @@
-// form.js
-
 import { isEscapeKey } from './util.js';
 import { uploadData } from './api.js';
 import { showSuccessMessage, showErrorMessage } from './message.js';
@@ -120,11 +118,10 @@ const onFormSubmit = (evt) => {
   uploadData(
     () => {
       showSuccessMessage();
-      closeUploadForm(); // ← кнопка восстановится здесь
+      closeUploadForm();
     },
     () => {
       showErrorMessage();
-      // На случай ошибки сети — тоже восстанавливаем
       uploadSubmitElement.disabled = false;
       uploadSubmitElement.textContent = 'Опубликовать';
     },
