@@ -1,10 +1,7 @@
 const BASE_URL = 'https://29.javascript.htmlacademy.pro/kekstagram';
 
 const sendRequest = (onSuccess, onError, method, body) => {
-  fetch(`${BASE_URL}${method === 'GET' ? '/data' : ''}`, {
-    method,
-    body,
-  })
+  fetch(`${BASE_URL}${method === 'GET' ? '/data' : '/'}`, { method, body })
     .then((response) => {
       if (!response.ok){
         throw new Error('Network response was not ok');

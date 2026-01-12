@@ -15,6 +15,7 @@ const descriptionInputElement = uploadFormElement.querySelector('.text__descript
 const uploadSubmitElement = uploadFormElement.querySelector('.img-upload__submit');
 
 const previewImage = document.querySelector('.img-upload__preview img');
+const effectsPreviews = document.querySelectorAll('.effects__preview');
 
 let pristine;
 
@@ -60,9 +61,12 @@ function closeUploadForm() {
   hashtagsInputElement.value = '';
   descriptionInputElement.value = '';
 
+  effectsPreviews.forEach((preview) => {
+    preview.style.backgroundImage = '';
+  });
+
   resetFiltersState();
   pristine.reset();
-  updateSubmitButtonState();
   uploadSubmitElement.disabled = false;
   uploadSubmitElement.textContent = 'Опубликовать';
 }
@@ -84,14 +88,18 @@ const openUploadForm = () => {
 
   const file = uploadInputElement.files[0];
   if (file) {
-    previewImage.src = URL.createObjectURL(file);
+    const imageUrl = URL.createObjectURL(file);
+    previewImage.src = imageUrl;
+    effectsPreviews.forEach((preview) => {
+      preview.style.backgroundImage = `url(${imageUrl})`;
+    });
+
     uploadStartElement.classList.add('hidden');
     uploadOverlayElement.classList.remove('hidden');
     document.body.classList.add('modal-open');
     document.addEventListener('keydown', onDocumentKeydown);
 
     resetFiltersState();
-    updateSubmitButtonState();
   }
 };
 
@@ -118,10 +126,11 @@ const onFormSubmit = (evt) => {
   uploadData(
     () => {
       showSuccessMessage();
-      closeUploadForm();
+      closeUploadForm(); // ← кнопка восстановится здесь
     },
     () => {
       showErrorMessage();
+      // На случай ошибки сети — тоже восстанавливаем
       uploadSubmitElement.disabled = false;
       uploadSubmitElement.textContent = 'Опубликовать';
     },

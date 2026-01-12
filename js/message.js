@@ -15,6 +15,7 @@ const showMessage = (templateId, buttonText = 'Закрыть') => {
   const onEscKeydown = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
+      evt.stopPropagation();
       removeMessage();
     }
   };
@@ -27,14 +28,14 @@ const showMessage = (templateId, buttonText = 'Закрыть') => {
 
   function removeMessage() {
     message.remove();
-    document.removeEventListener('keydown', onEscKeydown);
+    document.removeEventListener('keydown', onEscKeydown, true);
     document.removeEventListener('click', onOverlayClick);
   }
 
   if (button) {
     button.addEventListener('click', removeMessage);
   }
-  document.addEventListener('keydown', onEscKeydown);
+  document.addEventListener('keydown', onEscKeydown, true);
   document.addEventListener('click', onOverlayClick);
 
   return removeMessage;
@@ -42,6 +43,16 @@ const showMessage = (templateId, buttonText = 'Закрыть') => {
 
 const showSuccessMessage = () => showMessage('success', 'Круто!');
 const showErrorMessage = () => showMessage('error', 'Загрузить другой файл');
-const showDataLoadErrorMessage = () => showMessage('error', 'Не удалось загрузить фотографии');
+
+const showDataLoadErrorMessage = () => {
+  const message = document.createElement('section');
+  message.classList.add('data-error');
+  message.textContent = 'Не удалось загрузить фотографии';
+  document.body.append(message);
+
+  setTimeout(() => {
+    message.remove();
+  }, 5000);
+};
 
 export { showSuccessMessage, showErrorMessage, showDataLoadErrorMessage };
