@@ -2,11 +2,9 @@ const scaleControlSmaller = document.querySelector('.scale__control--smaller');
 const scaleControlBigger = document.querySelector('.scale__control--bigger');
 const scaleControlValue = document.querySelector('.scale__control--value');
 const previewImage = document.querySelector('.img-upload__preview img');
-
+const effectsList = document.querySelectorAll('.effects__radio');
 const effectLevelSlider = document.querySelector('.effect-level__slider');
 const effectLevelValue = document.querySelector('.effect-level__value');
-const effectsList = document.querySelectorAll('.effects__radio');
-const previewContainer = document.querySelector('.img-upload__preview');
 
 let currentScale = 100;
 let currentEffect = 'none';
@@ -27,28 +25,24 @@ const updateScale = () => {
   scaleControlValue.value = `${currentScale}%`;
 };
 
+export const updateEffectPreviews = (imageUrl) => {
+  const previews = document.querySelectorAll('.effects__preview');
+  previews.forEach((preview) => {
+    preview.style.backgroundImage = `url("${imageUrl}")`;
+  });
+};
+
 const updateFilter = (effect, value) => {
   let filter = '';
   switch (effect) {
-    case 'chrome':
-      filter = `grayscale(${value})`;
-      break;
-    case 'sepia':
-      filter = `sepia(${value})`;
-      break;
-    case 'marvin':
-      filter = `invert(${value}%)`;
-      break;
-    case 'phobos':
-      filter = `blur(${value}px)`;
-      break;
-    case 'heat':
-      filter = `brightness(${value})`;
-      break;
-    default:
-      filter = '';
+    case 'chrome': filter = `grayscale(${value})`; break;
+    case 'sepia': filter = `sepia(${value})`; break;
+    case 'marvin': filter = `invert(${value}%)`; break;
+    case 'phobos': filter = `blur(${value}px)`; break;
+    case 'heat': filter = `brightness(${value})`; break;
+    default: filter = '';
   }
-  previewContainer.style.filter = filter;
+  previewImage.style.filter = filter;
   effectLevelValue.value = effect === 'none' ? '' : String(value);
 };
 
@@ -64,10 +58,9 @@ export const resetSlider = () => {
   }
 
   const effectLevelContainer = effectLevelSlider.closest('.img-upload__effect-level');
-
   if (currentEffect === 'none') {
     effectLevelContainer.classList.add('hidden');
-    previewContainer.style.filter = '';
+    previewImage.style.filter = '';
     effectLevelValue.value = '';
   } else {
     effectLevelContainer.classList.remove('hidden');
@@ -78,7 +71,6 @@ export const resetSlider = () => {
       range: { min: config.min, max: config.max },
       step: config.step,
     });
-
     sliderInstance = effectLevelSlider.noUiSlider;
     sliderInstance.on('update', (values) => {
       const currentValue = parseFloat(values[0]);
@@ -89,10 +81,7 @@ export const resetSlider = () => {
 };
 
 export const resetEffectSelection = () => {
-  const originalRadio = document.querySelector('#effect-none');
-  if (originalRadio) {
-    originalRadio.checked = true;
-  }
+  document.querySelector('#effect-none').checked = true;
 };
 
 export const resetFiltersState = () => {

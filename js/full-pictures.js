@@ -53,9 +53,23 @@ function renderCommentsPortion(comments) {
 }
 
 function updateCommentsCounter() {
-  const shownText = `${Math.min(shownCommentsCount, currentComments.length)} из `;
-  const totalText = `${currentComments.length} комментариев`;
-  socialCommentCountElement.textContent = shownText + totalText;
+  socialCommentCountElement.innerHTML = '';
+  const shownCount = Math.min(shownCommentsCount, currentComments.length);
+  const totalCount = currentComments.length;
+
+  const shownCountElement = document.createElement('span');
+  shownCountElement.classList.add('social__comment-shown-count');
+  shownCountElement.textContent = shownCount;
+
+  const totalCountElement = document.createElement('span');
+  totalCountElement.classList.add('social__comment-total-count');
+  totalCountElement.textContent = totalCount;
+
+  socialCommentCountElement.appendChild(shownCountElement);
+  socialCommentCountElement.append(' из ');
+  socialCommentCountElement.appendChild(totalCountElement);
+  socialCommentCountElement.append(' комментариев');
+
   if (shownCommentsCount >= currentComments.length) {
     commentsLoaderElement.classList.add('hidden');
   } else {
